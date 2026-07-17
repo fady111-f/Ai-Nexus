@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
 import 'package:mockmate/features/auth/presentation/widgets/mockmate_brand.dart';
 import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
@@ -21,7 +22,12 @@ class HomeHeader extends StatelessWidget {
             Semantics(
               image: true,
               label: 'Profile placeholder',
-              child: Container(
+              child: InkWell(
+              onTap: () {
+              Navigator.pushNamed(context, AppRoutes.profile);
+              },
+               borderRadius: BorderRadius.circular(15),
+                child: Container(
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
@@ -34,7 +40,8 @@ class HomeHeader extends StatelessWidget {
                   color: MockMateColors.textSecondary,
                   size: 22,
                 ),
-              ),
+                ),
+              ), 
             ),
           ],
         ),
