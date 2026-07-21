@@ -59,84 +59,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _handleStartInterview() {
-    showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withValues(alpha: 0.68),
-      useSafeArea: true,
-      builder: (sheetContext) => Align(
-        alignment: Alignment.bottomCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 620),
-          child: Container(
-            key: const Key('interviewSetupComingSoonSheet'),
-            decoration: BoxDecoration(
-              color: MockMateColors.surfaceRaised,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(28),
-              ),
-              border: Border.all(color: MockMateColors.outlineStrong),
-            ),
-            padding: const EdgeInsets.fromLTRB(
-              MockMateSpacing.large,
-              MockMateSpacing.small,
-              MockMateSpacing.large,
-              MockMateSpacing.large,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Center(
-                  child: Container(
-                    width: 42,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: MockMateColors.outlineStrong,
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: MockMateSpacing.large),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 48,
-                    height: 48,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: MockMateColors.primary.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(
-                      Icons.auto_awesome_outlined,
-                      color: MockMateColors.primary,
-                      size: 24,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: MockMateSpacing.medium),
-                Text(
-                  'Interview setup is coming next.',
-                  style: Theme.of(sheetContext).textTheme.titleLarge,
-                ),
-                const SizedBox(height: MockMateSpacing.xSmall),
-                Text(
-                  "We're preparing the experience that will turn your profile into a focused mock interview.",
-                  style: Theme.of(sheetContext).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: MockMateSpacing.large),
-                ElevatedButton(
-                  key: const Key('dismissInterviewSetupSheetButton'),
-                  onPressed: () => Navigator.of(sheetContext).pop(),
-                  child: const Text('Got it'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    Navigator.of(context).pushNamed(AppRoutes.setup);
   }
 
   @override
@@ -164,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icons.person_search_outlined,
             title: 'Your setup is incomplete.',
             message:
-                'Complete onboarding so MockMate can personalize your dashboard.',
+                'Complete onboarding so Gahez? can personalize your dashboard.',
             actionLabel: 'Complete Setup',
             actionKey: const Key('returnToOnboardingButton'),
             onAction: _returnToOnboarding,

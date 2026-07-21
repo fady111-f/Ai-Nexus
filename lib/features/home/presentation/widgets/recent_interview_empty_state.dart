@@ -40,12 +40,12 @@ class RecentInterviewEmptyState extends StatelessWidget {
                 ),
                 const SizedBox(height: MockMateSpacing.medium),
                 Text(
-                  'No interviews yet',
+                  'No interviews yet — Your journey starts with your first mock interview.',
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: MockMateSpacing.xSmall),
                 Text(
-                  'Your first session will appear here with feedback, scores, and key moments.',
+                  'Practice real interview scenarios with local AI feedback and tracked metrics.',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: MockMateSpacing.large),

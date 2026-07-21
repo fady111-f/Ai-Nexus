@@ -27,7 +27,7 @@ class MockMateApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'MockMate',
+      title: 'Gahez?',
       debugShowCheckedModeBanner: false,
       theme: MockMateTheme.dark,
       initialRoute: AppRoutes.signIn,

@@ -12,6 +12,8 @@ import 'package:mockmate/features/replay/presentation/pages/interview_replay_pag
 import '../../features/profile/profile_screen.dart';
 import '../../features/cv_manager/cv_manager_screen.dart';
 import '../../features/live_interview/live_interview_screen.dart';
+import '../../features/live_interview/presentation/pages/interview_setup_screen.dart';
+import '../../features/live_interview/presentation/pages/pre_interview_lobby_screen.dart';
 import '../../features/results/results_screen.dart';
 
 class AppRouter {
@@ -40,6 +42,12 @@ class AppRouter {
         ),
       AppRoutes.profile => const ProfileScreen(),
       AppRoutes.cvManager => const CVManagerScreen(),
+      AppRoutes.setup => const InterviewSetupScreen(),
+      AppRoutes.lobby => PreInterviewLobbyScreen(
+          config: settings.arguments is InterviewSetupConfig
+              ? settings.arguments as InterviewSetupConfig
+              : null,
+        ),
       AppRoutes.liveInterview => const LiveInterviewScreen(),
       AppRoutes.results => const ResultsScreen(),
       AppRoutes.progress => ProgressPage(
