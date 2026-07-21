@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AiInterviewerAvatar extends StatelessWidget {
-  const AiInterviewerAvatar({Key? key}) : super(key: key);
+  const AiInterviewerAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +13,8 @@ class AiInterviewerAvatar extends StatelessWidget {
           height: 130,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: const Color(0xFF6366F1).withOpacity(0.1),
-            border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3), width: 2),
+            color: const Color(0xFF6366F1).withValues(alpha: 0.1),
+            border: Border.all(color: const Color(0xFF6366F1).withValues(alpha: 0.3), width: 2),
           ),
           child: const Icon(Icons.psychology_outlined, size: 70, color: Color(0xFF6366F1)),
         ),

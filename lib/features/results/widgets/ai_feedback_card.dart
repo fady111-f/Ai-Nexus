@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AiFeedbackCard extends StatelessWidget {
   final List<String> recommendations;
 
-  const AiFeedbackCard({Key? key, required this.recommendations}) : super(key: key);
+  const AiFeedbackCard({super.key, required this.recommendations});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class AiFeedbackCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF151922),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

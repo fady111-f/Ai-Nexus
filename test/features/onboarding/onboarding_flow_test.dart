@@ -5,6 +5,7 @@ import 'package:mockmate/features/auth/data/temporary_auth_service.dart';
 import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
 
 import '../../support/fake_onboarding_repository.dart';
+import '../../support/fake_interview_repository.dart';
 
 void main() {
   testWidgets('step navigation and back move through the controlled flow', (
@@ -181,6 +182,7 @@ Future<void> _enterOnboarding(
     MockMateApp(
       authService: TemporaryAuthService(),
       onboardingRepository: repository,
+      interviewRepository: FakeInterviewRepository(),
     ),
   );
   final signInButton = find.byKey(const Key('signInButton'));

@@ -6,6 +6,7 @@ import 'package:mockmate/core/theme/mockmate_theme.dart';
 import 'package:mockmate/features/home/presentation/pages/home_page.dart';
 import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
 
+import '../../support/fake_interview_repository.dart';
 import '../../support/fake_onboarding_repository.dart';
 
 void main() {
@@ -114,7 +115,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         theme: MockMateTheme.dark,
-        home: HomePage(onboardingRepository: repository),
+      home: HomePage(
+        onboardingRepository: repository,
+        interviewRepository: FakeInterviewRepository(),
+      ),
       ),
     );
 
@@ -160,7 +164,10 @@ Future<void> _pumpHome(
   await tester.pumpWidget(
     MaterialApp(
       theme: MockMateTheme.dark,
-      home: HomePage(onboardingRepository: repository),
+      home: HomePage(
+        onboardingRepository: repository,
+        interviewRepository: FakeInterviewRepository(),
+      ),
     ),
   );
   await tester.pumpAndSettle();

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mockmate/app/mockmate_app.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
 import 'package:mockmate/features/auth/data/temporary_auth_service.dart';
+import 'package:mockmate/features/interviews/data/local_interview_repository.dart';
 import 'package:mockmate/features/onboarding/data/local_onboarding_service.dart';
 
 void main() {
@@ -20,6 +21,7 @@ void main() {
     MockMateApp(
       authService: TemporaryAuthService(),
       onboardingRepository: LocalOnboardingService(),
+      interviewRepository: LocalInterviewRepository(),
     ),
   );
 }

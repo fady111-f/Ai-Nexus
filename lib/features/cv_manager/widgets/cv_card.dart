@@ -6,10 +6,10 @@ class CVCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const CVCard({
-    Key? key,
+    super.key,
     required this.cv,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class CVCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF151922),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF34D399).withOpacity(0.4), width: 1.5),
+        border: Border.all(color: const Color(0xFF34D399).withValues(alpha: 0.4), width: 1.5),
       ),
       child: Row(
         children: [
@@ -26,7 +26,7 @@ class CVCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.redAccent.withOpacity(0.1),
+              color: Colors.redAccent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.picture_as_pdf, color: Colors.redAccent, size: 32),
@@ -55,7 +55,7 @@ class CVCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF34D399).withOpacity(0.1),
+                        color: const Color(0xFF34D399).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(

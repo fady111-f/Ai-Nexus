@@ -1,10 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
 
 class InterviewDnaPreview extends StatelessWidget {
-  const InterviewDnaPreview({super.key});
+  const InterviewDnaPreview({required this.hasSessions, super.key});
+
+  final bool hasSessions;
 
   static const _metrics = [
     'Technical Depth',
@@ -26,31 +29,34 @@ class InterviewDnaPreview extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-              decoration: BoxDecoration(
-                color: MockMateColors.surfaceRaised,
-                borderRadius: BorderRadius.circular(99),
-                border: Border.all(color: MockMateColors.outline),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.lock_outline_rounded,
-                    size: 14,
-                    color: MockMateColors.textSecondary,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    'Locked',
-                    style: TextStyle(
-                      color: MockMateColors.textSecondary,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+            GestureDetector(
+              onTap: hasSessions ? () => Navigator.of(context).pushNamed(AppRoutes.progress) : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+                decoration: BoxDecoration(
+                  color: hasSessions ? MockMateColors.primary.withValues(alpha: 0.1) : MockMateColors.surfaceRaised,
+                  borderRadius: BorderRadius.circular(99),
+                  border: Border.all(color: hasSessions ? MockMateColors.primary.withValues(alpha: 0.3) : MockMateColors.outline),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasSessions ? Icons.arrow_forward_rounded : Icons.lock_outline_rounded,
+                      size: 14,
+                      color: hasSessions ? MockMateColors.primary : MockMateColors.textSecondary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 5),
+                    Text(
+                      hasSessions ? 'View Progress' : 'Locked',
+                      style: TextStyle(
+                        color: hasSessions ? MockMateColors.primary : MockMateColors.textSecondary,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

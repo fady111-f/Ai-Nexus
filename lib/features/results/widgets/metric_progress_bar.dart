@@ -6,11 +6,11 @@ class MetricProgressBar extends StatelessWidget {
   final Color barColor;
 
   const MetricProgressBar({
-    Key? key,
+    super.key,
     required this.label,
     required this.percentage,
     required this.barColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class MetricProgressBar extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage,
               minHeight: 6,
-              backgroundColor: Colors.white.withOpacity(0.05),
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
               valueColor: AlwaysStoppedAnimation<Color>(barColor),
             ),
           ),

@@ -8,13 +8,13 @@ class InterviewControlBar extends StatelessWidget {
   final VoidCallback onEndCall;
 
   const InterviewControlBar({
-    Key? key,
+    super.key,
     required this.isMuted,
     required this.isRecording,
     required this.onToggleMic,
     required this.onToggleRecord,
     required this.onEndCall,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class InterviewControlBar extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Icon(icon, color: Colors.white, size: 26),
       ),

@@ -5,10 +5,10 @@ class RecordingIndicator extends StatelessWidget {
   final String durationText;
 
   const RecordingIndicator({
-    Key? key,
+    super.key,
     required this.isRecording,
     this.durationText = "01:24",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class RecordingIndicator extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.redAccent.withOpacity(0.9),
+          color: Colors.redAccent.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(

@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
+import 'package:mockmate/features/interviews/domain/models/interview_session.dart';
 
 class QuickStats extends StatelessWidget {
-  const QuickStats({super.key});
+  const QuickStats({required this.sessions, super.key});
+
+  final List<InterviewSession> sessions;
 
   @override
   Widget build(BuildContext context) {
+    final totalInterviews = sessions.length;
+    final totalPracticeMinutes = sessions.fold<int>(
+      0,
+      (sum, session) => sum + session.duration.inMinutes,
+    );
+    
+    int? bestScore;
+    for (final session in sessions) {
+      if (session.overallScore != null) {
+        if (bestScore == null || session.overallScore! > bestScore) {
+          bestScore = session.overallScore;
+        }
+      }
+    }
+
     return Semantics(
       label:
-          'Quick Stats. Zero interviews, zero minutes practice time, no best score yet.',
+          'Quick Stats. $totalInterviews interviews, $totalPracticeMinutes minutes practice time, ${bestScore ?? 'no'} best score.',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,27 +42,27 @@ class QuickStats extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: _StatItem(
-                      value: '0',
+                      value: '$totalInterviews',
                       label: 'Interviews',
-                      valueKey: Key('interviewsStatValue'),
+                      valueKey: const Key('interviewsStatValue'),
                     ),
                   ),
                   _divider(),
-                  const Expanded(
+                  Expanded(
                     child: _StatItem(
-                      value: '0 min',
+                      value: '$totalPracticeMinutes min',
                       label: 'Practice Time',
-                      valueKey: Key('practiceTimeStatValue'),
+                      valueKey: const Key('practiceTimeStatValue'),
                     ),
                   ),
                   _divider(),
-                  const Expanded(
+                  Expanded(
                     child: _StatItem(
-                      value: '—',
+                      value: bestScore != null ? '$bestScore' : '—',
                       label: 'Best Score',
-                      valueKey: Key('bestScoreStatValue'),
+                      valueKey: const Key('bestScoreStatValue'),
                     ),
                   ),
                 ],

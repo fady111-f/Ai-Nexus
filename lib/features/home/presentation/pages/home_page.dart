@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
@@ -6,32 +7,48 @@ import 'package:mockmate/features/home/presentation/widgets/home_header.dart';
 import 'package:mockmate/features/home/presentation/widgets/interview_dna_preview.dart';
 import 'package:mockmate/features/home/presentation/widgets/profile_setup_summary.dart';
 import 'package:mockmate/features/home/presentation/widgets/quick_stats.dart';
-import 'package:mockmate/features/home/presentation/widgets/recent_interview_empty_state.dart';
+import 'package:mockmate/features/home/presentation/widgets/recent_activity.dart';
 import 'package:mockmate/features/home/presentation/widgets/start_interview_card.dart';
+import 'package:mockmate/features/interviews/domain/models/interview_session.dart';
+import 'package:mockmate/features/interviews/domain/repositories/interview_repository.dart';
 import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
 import 'package:mockmate/features/onboarding/domain/repositories/onboarding_repository.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({required this.onboardingRepository, super.key});
+  const HomePage({
+    required this.onboardingRepository,
+    required this.interviewRepository,
+    super.key,
+  });
 
   final OnboardingRepository onboardingRepository;
+  final InterviewRepository interviewRepository;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<UserProfile?> _profileFuture;
+  late Future<(UserProfile?, List<InterviewSession>)> _homeDataFuture;
 
   @override
   void initState() {
     super.initState();
-    _profileFuture = widget.onboardingRepository.loadUserProfile();
+    _homeDataFuture = _loadHomeData();
+  }
+
+  Future<(UserProfile?, List<InterviewSession>)> _loadHomeData() async {
+    if (kDebugMode) {
+      await widget.interviewRepository.seedDemoSessions();
+    }
+    final profile = await widget.onboardingRepository.loadUserProfile();
+    final sessions = await widget.interviewRepository.getSessions();
+    return (profile, sessions);
   }
 
   void _retryProfileLoad() {
     setState(() {
-      _profileFuture = widget.onboardingRepository.loadUserProfile();
+      _homeDataFuture = _loadHomeData();
     });
   }
 
@@ -124,8 +141,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<UserProfile?>(
-      future: _profileFuture,
+    return FutureBuilder<(UserProfile?, List<InterviewSession>)>(
+      future: _homeDataFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const _HomeLoadingState();
@@ -141,8 +158,8 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        final profile = snapshot.data;
-        if (profile == null) {
+        final data = snapshot.data;
+        if (data == null || data.$1 == null) {
           return _HomeStatusState(
             icon: Icons.person_search_outlined,
             title: 'Your setup is incomplete.',
@@ -155,7 +172,8 @@ class _HomePageState extends State<HomePage> {
         }
 
         return _HomeDashboard(
-          profile: profile,
+          profile: data.$1!,
+          sessions: data.$2,
           onStartInterview: _handleStartInterview,
         );
       },
@@ -164,9 +182,14 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeDashboard extends StatelessWidget {
-  const _HomeDashboard({required this.profile, required this.onStartInterview});
+  const _HomeDashboard({
+    required this.profile,
+    required this.sessions,
+    required this.onStartInterview,
+  });
 
   final UserProfile profile;
+  final List<InterviewSession> sessions;
   final VoidCallback onStartInterview;
 
   @override
@@ -216,30 +239,32 @@ class _HomeDashboard extends StatelessWidget {
                                   onStartInterview: onStartInterview,
                                 ),
                                 SizedBox(height: sectionGap),
-                                const QuickStats(),
+                                QuickStats(sessions: sessions),
                                 SizedBox(height: sectionGap),
                                 if (wide)
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Expanded(
-                                        child: InterviewDnaPreview(),
+                                      Expanded(
+                                        child: InterviewDnaPreview(hasSessions: sessions.isNotEmpty),
                                       ),
                                       const SizedBox(
                                         width: MockMateSpacing.large,
                                       ),
                                       Expanded(
-                                        child: RecentInterviewEmptyState(
+                                        child: RecentActivity(
+                                          sessions: sessions,
                                           onStartInterview: onStartInterview,
                                         ),
                                       ),
                                     ],
                                   )
                                 else ...[
-                                  const InterviewDnaPreview(),
+                                  InterviewDnaPreview(hasSessions: sessions.isNotEmpty),
                                   SizedBox(height: sectionGap),
-                                  RecentInterviewEmptyState(
+                                  RecentActivity(
+                                    sessions: sessions,
                                     onStartInterview: onStartInterview,
                                   ),
                                 ],

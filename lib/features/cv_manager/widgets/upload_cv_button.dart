@@ -5,10 +5,10 @@ class UploadCVButton extends StatelessWidget {
   final bool isUploading;
 
   const UploadCVButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.isUploading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class UploadCVButton extends StatelessWidget {
         onPressed: isUploading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF6366F1),
-          disabledBackgroundColor: const Color(0xFF6366F1).withOpacity(0.5),
+          disabledBackgroundColor: const Color(0xFF6366F1).withValues(alpha: 0.5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,
         ),

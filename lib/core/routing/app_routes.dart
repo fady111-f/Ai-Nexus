@@ -6,4 +6,6 @@ abstract final class AppRoutes {
   static const String cvManager = '/cv-manager';
   static const String liveInterview = '/live-interview';
   static const String results = '/results';
+  static const String progress = '/progress';
+  static const String replay = '/replay';
 }

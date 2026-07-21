@@ -10,7 +10,7 @@ CVModel? _globalCurrentCV;
 bool _globalIsUploading = false;
 
 class CVManagerScreen extends StatefulWidget {
-  const CVManagerScreen({Key? key}) : super(key: key);
+  const CVManagerScreen({super.key});
 
   @override
   State<CVManagerScreen> createState() => _CVManagerScreenState();
@@ -130,7 +130,7 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
       decoration: BoxDecoration(
         color: const Color(0xFF151922),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

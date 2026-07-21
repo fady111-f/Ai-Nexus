@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EmptyCVWidget extends StatelessWidget {
-  const EmptyCVWidget({Key? key}) : super(key: key);
+  const EmptyCVWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class EmptyCVWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF151922),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3), width: 1.5),
+        border: Border.all(color: const Color(0xFF6366F1).withValues(alpha: 0.3), width: 1.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -19,7 +19,7 @@ class EmptyCVWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.1),
+              color: const Color(0xFF6366F1).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.cloud_upload_outlined, size: 50, color: Color(0xFF6366F1)),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen({Key? key}) : super(key: key);
+  const ResultsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class ResultsScreen extends StatelessWidget {
                   color: const Color(0xFF151922),
                   border: Border.all(color: const Color(0xFF6366F1), width: 4),
                   boxShadow: [
-                    BoxShadow(color: const Color(0xFF6366F1).withOpacity(0.2), blurRadius: 20),
+                    BoxShadow(color: const Color(0xFF6366F1).withValues(alpha: 0.2), blurRadius: 20),
                   ],
                 ),
                 child: const Column(
@@ -60,7 +60,7 @@ class ResultsScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF151922),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.05)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class ResultsScreen extends StatelessWidget {
             child: LinearProgressIndicator(
               value: percentage,
               minHeight: 6,
-              backgroundColor: Colors.white.withOpacity(0.05),
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
               valueColor: AlwaysStoppedAnimation<Color>(barColor),
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LiveInterviewScreen extends StatefulWidget {
-  const LiveInterviewScreen({Key? key}) : super(key: key);
+  const LiveInterviewScreen({super.key});
 
   @override
   State<LiveInterviewScreen> createState() => _LiveInterviewScreenState();
@@ -28,7 +28,7 @@ class _LiveInterviewScreenState extends State<LiveInterviewScreen> {
                     height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFF6366F1).withOpacity(0.1),
+                      color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                     ),
                     child: const Icon(Icons.face, size: 60, color: Color(0xFF6366F1)),
                   ),
@@ -121,7 +121,7 @@ class _LiveInterviewScreenState extends State<LiveInterviewScreen> {
         decoration: BoxDecoration(
           color: color,
           shape: BoxShape.circle,
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
         ),
         child: Icon(icon, color: Colors.white, size: 26),
       ),

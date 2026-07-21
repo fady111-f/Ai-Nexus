@@ -4,6 +4,7 @@ import 'package:mockmate/app/mockmate_app.dart';
 import 'package:mockmate/features/auth/data/temporary_auth_service.dart';
 
 import 'support/fake_onboarding_repository.dart';
+import 'support/fake_interview_repository.dart';
 
 void main() {
   testWidgets('launches on the preserved sign-in screen', (tester) async {
@@ -11,6 +12,7 @@ void main() {
       MockMateApp(
         authService: TemporaryAuthService(),
         onboardingRepository: FakeOnboardingRepository(),
+        interviewRepository: FakeInterviewRepository(),
       ),
     );
 
@@ -31,6 +33,7 @@ void main() {
         MockMateApp(
           authService: authService,
           onboardingRepository: FakeOnboardingRepository(),
+          interviewRepository: FakeInterviewRepository(),
         ),
       );
 
@@ -53,6 +56,7 @@ void main() {
           completed: true,
           savedProfile: sampleUserProfile,
         ),
+        interviewRepository: FakeInterviewRepository(),
       ),
     );
 
@@ -77,6 +81,7 @@ void main() {
         onboardingRepository: FakeOnboardingRepository(
           failCompletionCheck: true,
         ),
+        interviewRepository: FakeInterviewRepository(),
       ),
     );
 
@@ -106,6 +111,7 @@ void main() {
           MockMateApp(
             authService: TemporaryAuthService(),
             onboardingRepository: FakeOnboardingRepository(),
+            interviewRepository: FakeInterviewRepository(),
           ),
         );
         await tester.pump(const Duration(milliseconds: 100));

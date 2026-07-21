@@ -4,7 +4,7 @@ import 'widgets/profile_menu_item.dart';
 import 'package:mockmate/features/cv_manager/cv_manager_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF151922),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.05)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -99,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: const Color(0xFF151922),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withOpacity(0.05)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Column(
                 children: [

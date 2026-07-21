@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ScoreCircleWidget extends StatelessWidget {
   final int score;
 
-  const ScoreCircleWidget({Key? key, required this.score}) : super(key: key);
+  const ScoreCircleWidget({super.key, required this.score});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class ScoreCircleWidget extends StatelessWidget {
           color: const Color(0xFF151922),
           border: Border.all(color: const Color(0xFF6366F1), width: 4),
           boxShadow: [
-            BoxShadow(color: const Color(0xFF6366F1).withOpacity(0.2), blurRadius: 20),
+            BoxShadow(color: const Color(0xFF6366F1).withValues(alpha: 0.2), blurRadius: 20),
           ],
         ),
         child: Column(
