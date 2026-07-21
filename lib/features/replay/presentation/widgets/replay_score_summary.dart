@@ -30,11 +30,16 @@ class ReplayScoreSummary extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: MockMateColors.surfaceRaised,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: MockMateColors.cyan.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: MockMateColors.cyan.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -42,15 +47,15 @@ class ReplayScoreSummary extends StatelessWidget {
                     Text(
                       '${session.overallScore}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: MockMateColors.cyan,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        color: MockMateColors.cyan,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       ' / 100',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: MockMateColors.textSecondary,
-                          ),
+                        color: MockMateColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -58,9 +63,15 @@ class ReplayScoreSummary extends StatelessWidget {
             ],
           ),
           const SizedBox(height: MockMateSpacing.large),
-          _ScoreRow(label: 'Technical Accuracy', score: session.scores!.technicalAccuracy),
+          _ScoreRow(
+            label: 'Technical Accuracy',
+            score: session.scores!.technicalAccuracy,
+          ),
           const SizedBox(height: MockMateSpacing.medium),
-          _ScoreRow(label: 'Communication', score: session.scores!.communication),
+          _ScoreRow(
+            label: 'Communication',
+            score: session.scores!.communication,
+          ),
           const SizedBox(height: MockMateSpacing.medium),
           _ScoreRow(label: 'Confidence', score: session.scores!.confidence),
           const SizedBox(height: MockMateSpacing.medium),
@@ -87,9 +98,11 @@ class _ScoreRow extends StatelessWidget {
           width: 140,
           child: Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: MockMateColors.textSecondary,
-                ),
+              color: MockMateColors.textSecondary,
+            ),
           ),
         ),
         const SizedBox(width: MockMateSpacing.medium),
@@ -121,9 +134,9 @@ class _ScoreRow extends StatelessWidget {
           width: 32,
           child: Text(
             '$score',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.end,
           ),
         ),

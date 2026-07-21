@@ -29,19 +29,23 @@ class _RecentActivityState extends State<RecentActivity> {
     return widget.sessions.where((session) {
       // Filter by Role
       if (_selectedRole != 'All Roles' &&
-          !session.jobTitle.toLowerCase().contains(_selectedRole.toLowerCase())) {
+          !session.jobTitle.toLowerCase().contains(
+            _selectedRole.toLowerCase(),
+          )) {
         return false;
       }
       // Filter by Type
       if (_selectedType != 'All Types' &&
-          session.interviewType.label.toLowerCase() != _selectedType.toLowerCase()) {
+          session.interviewType.label.toLowerCase() !=
+              _selectedType.toLowerCase()) {
         return false;
       }
       // Filter by Score
       if (_selectedScore != 'All Scores' && session.overallScore != null) {
         final score = session.overallScore!;
         if (_selectedScore == '80+ High' && score < 80) return false;
-        if (_selectedScore == '60-79 Mid' && (score < 60 || score >= 80)) return false;
+        if (_selectedScore == '60-79 Mid' && (score < 60 || score >= 80))
+          return false;
         if (_selectedScore == '<60 Low' && score >= 60) return false;
       }
       return true;
@@ -51,7 +55,9 @@ class _RecentActivityState extends State<RecentActivity> {
   @override
   Widget build(BuildContext context) {
     if (widget.sessions.isEmpty) {
-      return RecentInterviewEmptyState(onStartInterview: widget.onStartInterview);
+      return RecentInterviewEmptyState(
+        onStartInterview: widget.onStartInterview,
+      );
     }
 
     final filtered = _filteredSessions;
@@ -86,7 +92,12 @@ class _RecentActivityState extends State<RecentActivity> {
             children: [
               _buildFilterDropdown(
                 value: _selectedRole,
-                items: ['All Roles', 'Senior Flutter Developer', 'Mobile Engineer', 'Backend Engineer'],
+                items: [
+                  'All Roles',
+                  'Senior Flutter Developer',
+                  'Mobile Engineer',
+                  'Backend Engineer',
+                ],
                 onChanged: (val) => setState(() => _selectedRole = val!),
               ),
               const SizedBox(width: 8),
@@ -123,7 +134,11 @@ class _RecentActivityState extends State<RecentActivity> {
               padding: const EdgeInsets.all(MockMateSpacing.large),
               child: Column(
                 children: [
-                  const Icon(Icons.filter_list_off_rounded, color: MockMateColors.textSecondary, size: 36),
+                  const Icon(
+                    Icons.filter_list_off_rounded,
+                    color: MockMateColors.textSecondary,
+                    size: 36,
+                  ),
                   const SizedBox(height: MockMateSpacing.small),
                   const Text(
                     'No matching interviews found',
@@ -133,7 +148,10 @@ class _RecentActivityState extends State<RecentActivity> {
                   const Text(
                     'Try resetting your filters or start a new practice interview.',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: MockMateColors.textSecondary, fontSize: 12),
+                    style: TextStyle(
+                      color: MockMateColors.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                   const SizedBox(height: MockMateSpacing.medium),
                   OutlinedButton.icon(
@@ -157,7 +175,8 @@ class _RecentActivityState extends State<RecentActivity> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: filtered.length,
-            separatorBuilder: (_, _) => const SizedBox(height: MockMateSpacing.small),
+            separatorBuilder: (_, _) =>
+                const SizedBox(height: MockMateSpacing.small),
             itemBuilder: (context, index) {
               final session = filtered[index];
               return Container(
@@ -176,7 +195,11 @@ class _RecentActivityState extends State<RecentActivity> {
                         color: MockMateColors.primary.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(Icons.insights_rounded, color: MockMateColors.primary, size: 22),
+                      child: const Icon(
+                        Icons.insights_rounded,
+                        color: MockMateColors.primary,
+                        size: 22,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -185,30 +208,63 @@ class _RecentActivityState extends State<RecentActivity> {
                         children: [
                           Text(
                             session.jobTitle,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 2),
                           Row(
                             children: [
-                              Text(
-                                session.interviewType.label,
-                                style: const TextStyle(color: MockMateColors.cyan, fontSize: 11, fontWeight: FontWeight.w600),
+                              Flexible(
+                                child: Text(
+                                  session.interviewType.label,
+                                  style: const TextStyle(
+                                    color: MockMateColors.cyan,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               const SizedBox(width: 8),
-                              const Text('•', style: TextStyle(color: MockMateColors.textSecondary, fontSize: 11)),
-                              const SizedBox(width: 8),
-                              Text(
-                                DateFormat.yMMMd().format(session.startedAt),
-                                style: const TextStyle(color: MockMateColors.textSecondary, fontSize: 11),
+                              const Text(
+                                '•',
+                                style: TextStyle(
+                                  color: MockMateColors.textSecondary,
+                                  fontSize: 11,
+                                ),
                               ),
                               const SizedBox(width: 8),
-                              const Text('•', style: TextStyle(color: MockMateColors.textSecondary, fontSize: 11)),
+                              Flexible(
+                                child: Text(
+                                  DateFormat.yMMMd().format(session.startedAt),
+                                  style: const TextStyle(
+                                    color: MockMateColors.textSecondary,
+                                    fontSize: 11,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                '•',
+                                style: TextStyle(
+                                  color: MockMateColors.textSecondary,
+                                  fontSize: 11,
+                                ),
+                              ),
                               const SizedBox(width: 8),
                               Text(
                                 '${session.duration.inMinutes}m',
-                                style: const TextStyle(color: MockMateColors.textSecondary, fontSize: 11),
+                                style: const TextStyle(
+                                  color: MockMateColors.textSecondary,
+                                  fontSize: 11,
+                                ),
                               ),
                             ],
                           ),
@@ -218,11 +274,16 @@ class _RecentActivityState extends State<RecentActivity> {
                     const SizedBox(width: 8),
                     if (session.overallScore != null)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: MockMateColors.surfaceRaised,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: MockMateColors.outlineStrong),
+                          border: Border.all(
+                            color: MockMateColors.outlineStrong,
+                          ),
                         ),
                         child: Text(
                           '${session.overallScore}',
@@ -234,12 +295,14 @@ class _RecentActivityState extends State<RecentActivity> {
                         ),
                       ),
                     IconButton(
-                      icon: const Icon(Icons.play_arrow_rounded, color: MockMateColors.primary),
+                      icon: const Icon(
+                        Icons.play_arrow_rounded,
+                        color: MockMateColors.primary,
+                      ),
                       onPressed: () {
-                        Navigator.of(context).pushNamed(
-                          AppRoutes.replay,
-                          arguments: session.id,
-                        );
+                        Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.replay, arguments: session.id);
                       },
                     ),
                   ],
@@ -267,14 +330,19 @@ class _RecentActivityState extends State<RecentActivity> {
         child: DropdownButton<String>(
           value: value,
           dropdownColor: MockMateColors.surfaceRaised,
-          icon: const Icon(Icons.arrow_drop_down_rounded, color: MockMateColors.textSecondary, size: 20),
-          style: const TextStyle(color: MockMateColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
+          icon: const Icon(
+            Icons.arrow_drop_down_rounded,
+            color: MockMateColors.textSecondary,
+            size: 20,
+          ),
+          style: const TextStyle(
+            color: MockMateColors.textPrimary,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
           onChanged: onChanged,
           items: items.map((item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
+            return DropdownMenuItem<String>(value: item, child: Text(item));
           }).toList(),
         ),
       ),

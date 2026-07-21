@@ -50,7 +50,8 @@ class ProgressSummaryCards extends StatelessWidget {
                 value: summary.improvement != null
                     ? '${summary.improvement! > 0 ? '+' : ''}${summary.improvement}'
                     : '—',
-                valueColor: summary.improvement != null && summary.improvement! > 0
+                valueColor:
+                    summary.improvement != null && summary.improvement! > 0
                     ? MockMateColors.cyan
                     : null,
                 icon: Icons.trending_up_rounded,
@@ -96,20 +97,25 @@ class _SummaryCard extends StatelessWidget {
                 child: Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: MockMateColors.textSecondary,
-                      ),
+                    color: MockMateColors.textSecondary,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
           const SizedBox(height: MockMateSpacing.medium),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: valueColor,
-                  fontWeight: FontWeight.bold,
-                ),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              maxLines: 1,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: valueColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

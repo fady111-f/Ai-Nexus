@@ -4,7 +4,11 @@ import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
 
 class DnaMetric {
-  const DnaMetric({required this.name, required this.score, required this.icon});
+  const DnaMetric({
+    required this.name,
+    required this.score,
+    required this.icon,
+  });
   final String name;
   final int score;
   final IconData icon;
@@ -17,11 +21,27 @@ class InterviewDnaPreview extends StatelessWidget {
 
   static const List<DnaMetric> _coreMetrics = [
     DnaMetric(name: 'Technical Depth', score: 78, icon: Icons.code_rounded),
-    DnaMetric(name: 'Clarity', score: 82, icon: Icons.record_voice_over_rounded),
+    DnaMetric(
+      name: 'Clarity',
+      score: 82,
+      icon: Icons.record_voice_over_rounded,
+    ),
     DnaMetric(name: 'Conciseness', score: 70, icon: Icons.compress_rounded),
-    DnaMetric(name: 'Confidence Signals', score: 85, icon: Icons.psychology_rounded),
-    DnaMetric(name: 'Evidence-Based Answers', score: 75, icon: Icons.verified_rounded),
-    DnaMetric(name: 'Adaptability', score: 80, icon: Icons.auto_awesome_rounded),
+    DnaMetric(
+      name: 'Confidence Signals',
+      score: 85,
+      icon: Icons.psychology_rounded,
+    ),
+    DnaMetric(
+      name: 'Evidence-Based Answers',
+      score: 75,
+      icon: Icons.verified_rounded,
+    ),
+    DnaMetric(
+      name: 'Adaptability',
+      score: 80,
+      icon: Icons.auto_awesome_rounded,
+    ),
   ];
 
   static const List<String> _levels = [
@@ -47,11 +67,16 @@ class InterviewDnaPreview extends StatelessWidget {
             GestureDetector(
               onTap: () => Navigator.of(context).pushNamed(AppRoutes.progress),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: MockMateColors.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(99),
-                  border: Border.all(color: MockMateColors.primary.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: MockMateColors.primary.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
@@ -100,7 +125,9 @@ class InterviewDnaPreview extends StatelessWidget {
                               SizedBox.square(
                                 dimension: 180,
                                 child: CustomPaint(
-                                  painter: _RadarChartPainter(metrics: _coreMetrics),
+                                  painter: _RadarChartPainter(
+                                    metrics: _coreMetrics,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: MockMateSpacing.large),
@@ -114,7 +141,9 @@ class InterviewDnaPreview extends StatelessWidget {
                                 child: SizedBox.square(
                                   dimension: 170,
                                   child: CustomPaint(
-                                    painter: _RadarChartPainter(metrics: _coreMetrics),
+                                    painter: _RadarChartPainter(
+                                      metrics: _coreMetrics,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -129,7 +158,11 @@ class InterviewDnaPreview extends StatelessWidget {
                 // Gamified Levels Tracker
                 const Text(
                   'Progression Level',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: MockMateColors.textSecondary),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: MockMateColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 _buildGamifiedLevelsTracker(context),
@@ -142,9 +175,9 @@ class InterviewDnaPreview extends StatelessWidget {
                 Text(
                   'Core Metrics Breakdown',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
                 const SizedBox(height: MockMateSpacing.medium),
                 _buildCoreMetricsList(),
@@ -162,23 +195,41 @@ class InterviewDnaPreview extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: MockMateColors.cyan.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: MockMateColors.cyan.withValues(alpha: 0.3)),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.trending_up_rounded, color: MockMateColors.cyan, size: 14),
-                  SizedBox(width: 5),
-                  Text(
-                    'Growth over time: 62 → 78 (+16 pts)',
-                    style: TextStyle(color: MockMateColors.cyan, fontSize: 11, fontWeight: FontWeight.bold),
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: MockMateColors.cyan.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: MockMateColors.cyan.withValues(alpha: 0.3),
                   ),
-                ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.trending_up_rounded,
+                      color: MockMateColors.cyan,
+                      size: 14,
+                    ),
+                    const SizedBox(width: 5),
+                    Flexible(
+                      child: Text(
+                        'Growth over time: 62 → 78 (+16 pts)',
+                        style: const TextStyle(
+                          color: MockMateColors.cyan,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -186,7 +237,9 @@ class InterviewDnaPreview extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           'Active Candidate Profile',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
         Text(
@@ -219,6 +272,7 @@ class InterviewDnaPreview extends StatelessWidget {
     required String value,
   }) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: MockMateColors.surfaceRaised,
@@ -226,17 +280,33 @@ class InterviewDnaPreview extends StatelessWidget {
         border: Border.all(color: MockMateColors.outlineStrong),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: iconColor, size: 16),
           const SizedBox(width: 6),
-          Text(
-            '$label ',
-            style: const TextStyle(color: MockMateColors.textSecondary, fontSize: 12),
-          ),
-          Text(
-            value,
-            style: const TextStyle(color: MockMateColors.textPrimary, fontSize: 12, fontWeight: FontWeight.bold),
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: '$label ',
+                    style: const TextStyle(
+                      color: MockMateColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                  TextSpan(
+                    text: value,
+                    style: const TextStyle(
+                      color: MockMateColors.textPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),
@@ -259,15 +329,15 @@ class InterviewDnaPreview extends StatelessWidget {
                   color: isActive
                       ? MockMateColors.primary.withValues(alpha: 0.25)
                       : isCompleted
-                          ? MockMateColors.surfaceRaised
-                          : MockMateColors.background,
+                      ? MockMateColors.surfaceRaised
+                      : MockMateColors.background,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isActive
                         ? MockMateColors.primary
                         : isCompleted
-                            ? MockMateColors.outlineStrong
-                            : MockMateColors.outline,
+                        ? MockMateColors.outlineStrong
+                        : MockMateColors.outline,
                     width: isActive ? 1.5 : 1,
                   ),
                 ),
@@ -277,14 +347,14 @@ class InterviewDnaPreview extends StatelessWidget {
                       isActive
                           ? Icons.workspace_premium_rounded
                           : isCompleted
-                              ? Icons.check_circle_rounded
-                              : Icons.radio_button_unchecked_rounded,
+                          ? Icons.check_circle_rounded
+                          : Icons.radio_button_unchecked_rounded,
                       size: 16,
                       color: isActive
                           ? MockMateColors.primary
                           : isCompleted
-                              ? MockMateColors.cyan
-                              : MockMateColors.textSecondary,
+                          ? MockMateColors.cyan
+                          : MockMateColors.textSecondary,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -294,10 +364,12 @@ class InterviewDnaPreview extends StatelessWidget {
                         color: isActive
                             ? Colors.white
                             : isCompleted
-                                ? MockMateColors.textPrimary
-                                : MockMateColors.textSecondary,
+                            ? MockMateColors.textPrimary
+                            : MockMateColors.textSecondary,
                         fontSize: 10,
-                        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isActive
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -326,7 +398,10 @@ class InterviewDnaPreview extends StatelessWidget {
                 width: 140,
                 child: Text(
                   m.name,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               Expanded(
@@ -337,7 +412,11 @@ class InterviewDnaPreview extends StatelessWidget {
                     minHeight: 8,
                     backgroundColor: MockMateColors.surfaceRaised,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Color.lerp(MockMateColors.primary, MockMateColors.cyan, factor)!,
+                      Color.lerp(
+                        MockMateColors.primary,
+                        MockMateColors.cyan,
+                        factor,
+                      )!,
                     ),
                   ),
                 ),

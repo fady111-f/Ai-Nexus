@@ -11,7 +11,8 @@ class PreInterviewLobbyScreen extends StatefulWidget {
   final InterviewSetupConfig? config;
 
   @override
-  State<PreInterviewLobbyScreen> createState() => _PreInterviewLobbyScreenState();
+  State<PreInterviewLobbyScreen> createState() =>
+      _PreInterviewLobbyScreenState();
 }
 
 class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
@@ -68,7 +69,10 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Pre-Interview Lobby', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Pre-Interview Lobby',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () => Navigator.of(context).pop(),
@@ -140,15 +144,19 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                   color: MockMateColors.primary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.tune_rounded, color: MockMateColors.primary, size: 20),
+                child: const Icon(
+                  Icons.tune_rounded,
+                  color: MockMateColors.primary,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 'Device Check',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
             ],
           ),
@@ -169,7 +177,11 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.mic_rounded, color: MockMateColors.cyan, size: 22),
+                const Icon(
+                  Icons.mic_rounded,
+                  color: MockMateColors.cyan,
+                  size: 22,
+                ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: SizedBox(
@@ -182,7 +194,11 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                           width: 8,
                           height: 24 * level,
                           decoration: BoxDecoration(
-                            color: Color.lerp(MockMateColors.primary, MockMateColors.cyan, level),
+                            color: Color.lerp(
+                              MockMateColors.primary,
+                              MockMateColors.cyan,
+                              level,
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                         );
@@ -193,7 +209,11 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                 const SizedBox(width: 14),
                 const Text(
                   'Live',
-                  style: TextStyle(color: MockMateColors.cyan, fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: MockMateColors.cyan,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -207,7 +227,9 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _runSpeakerTest,
                   icon: Icon(
-                    _isTestingAudio ? Icons.volume_up_rounded : Icons.graphic_eq_rounded,
+                    _isTestingAudio
+                        ? Icons.volume_up_rounded
+                        : Icons.graphic_eq_rounded,
                     color: MockMateColors.cyan,
                     size: 18,
                   ),
@@ -220,7 +242,9 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
           Text(
             _speakerStatus,
             style: TextStyle(
-              color: _isTestingAudio ? MockMateColors.cyan : MockMateColors.textSecondary,
+              color: _isTestingAudio
+                  ? MockMateColors.cyan
+                  : MockMateColors.textSecondary,
               fontSize: 12,
             ),
           ),
@@ -249,8 +273,12 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
           _buildStatusTile(
             icon: Icons.mic_none_rounded,
             title: 'Microphone Permission',
-            subtitle: _micPermissionGranted ? 'Microphone Access: Granted' : 'Permission needed',
-            statusColor: _micPermissionGranted ? Colors.greenAccent : Colors.amberAccent,
+            subtitle: _micPermissionGranted
+                ? 'Microphone Access: Granted'
+                : 'Permission needed',
+            statusColor: _micPermissionGranted
+                ? Colors.greenAccent
+                : Colors.amberAccent,
             statusText: _micPermissionGranted ? 'Granted' : 'Request',
             onActionTap: () => setState(() => _micPermissionGranted = true),
           ),
@@ -283,11 +311,17 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
                 ),
                 Text(
                   subtitle,
-                  style: const TextStyle(color: MockMateColors.textSecondary, fontSize: 11),
+                  style: const TextStyle(
+                    color: MockMateColors.textSecondary,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -303,7 +337,11 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
               ),
               child: Text(
                 statusText,
-                style: TextStyle(color: statusColor, fontSize: 11, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: statusColor,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -319,13 +357,12 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            MockMateColors.surface,
-            MockMateColors.surfaceRaised,
-          ],
+          colors: [MockMateColors.surface, MockMateColors.surfaceRaised],
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: MockMateColors.primary.withValues(alpha: 0.3)),
+        border: Border.all(
+          color: MockMateColors.primary.withValues(alpha: 0.3),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,30 +375,58 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                   color: MockMateColors.primary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(Icons.assignment_outlined, color: MockMateColors.primary, size: 20),
+                child: const Icon(
+                  Icons.assignment_outlined,
+                  color: MockMateColors.primary,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Text(
                 'Interview Summary',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
             ],
           ),
           const SizedBox(height: MockMateSpacing.large),
 
-          _buildSummaryDetailRow(Icons.work_rounded, 'Target Role', cfg.targetRole),
-          _buildSummaryDetailRow(Icons.psychology_rounded, 'Interview Type', cfg.interviewType),
-          _buildSummaryDetailRow(Icons.tune_rounded, 'Difficulty Level', cfg.difficulty),
-          _buildSummaryDetailRow(Icons.timer_rounded, 'Session Duration', '${cfg.durationMinutes} Minutes'),
-          _buildSummaryDetailRow(Icons.language_rounded, 'Language', cfg.language),
-          _buildSummaryDetailRow(Icons.description_rounded, 'Selected CV', cfg.cvFileName),
+          _buildSummaryDetailRow(
+            Icons.work_rounded,
+            'Target Role',
+            cfg.targetRole,
+          ),
+          _buildSummaryDetailRow(
+            Icons.psychology_rounded,
+            'Interview Type',
+            cfg.interviewType,
+          ),
+          _buildSummaryDetailRow(
+            Icons.tune_rounded,
+            'Difficulty Level',
+            cfg.difficulty,
+          ),
+          _buildSummaryDetailRow(
+            Icons.timer_rounded,
+            'Session Duration',
+            '${cfg.durationMinutes} Minutes',
+          ),
+          _buildSummaryDetailRow(
+            Icons.language_rounded,
+            'Language',
+            cfg.language,
+          ),
+          _buildSummaryDetailRow(
+            Icons.description_rounded,
+            'Selected CV',
+            cfg.cvFileName,
+          ),
 
           const SizedBox(height: MockMateSpacing.xLarge),
 
-          // Glowing Start Button
+          // Glowing Start Button (Fixed width to fill container)
           DecoratedBox(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -374,19 +439,30 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
                 ),
               ],
             ),
-            child: ElevatedButton.icon(
-              key: const Key('startMockInterviewButton'),
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.liveInterview);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: MockMateColors.primaryStrong,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-              ),
-              icon: const Icon(Icons.mic_rounded, size: 22, color: Colors.white),
-              label: const Text(
-                'Start Mock Interview',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                key: const Key('startMockInterviewButton'),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.liveInterview);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: MockMateColors.primaryStrong,
+                  padding: const EdgeInsets.symmetric(vertical: 18),
+                ),
+                icon: const Icon(
+                  Icons.mic_rounded,
+                  size: 22,
+                  color: Colors.white,
+                ),
+                label: const Text(
+                  'Start Mock Interview',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
@@ -404,15 +480,23 @@ class _PreInterviewLobbyScreenState extends State<PreInterviewLobbyScreen> {
           const SizedBox(width: 10),
           Text(
             '$label:',
-            style: const TextStyle(color: MockMateColors.textSecondary, fontSize: 13),
-          ),
-          const Spacer(),
-          Text(
-            value,
             style: const TextStyle(
-              color: MockMateColors.textPrimary,
-              fontWeight: FontWeight.bold,
+              color: MockMateColors.textSecondary,
               fontSize: 13,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: MockMateColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
           ),
         ],
