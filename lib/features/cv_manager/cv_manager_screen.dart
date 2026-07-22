@@ -5,10 +5,6 @@ import 'widgets/upload_cv_button.dart';
 import 'widgets/cv_card.dart';
 import 'package:file_picker/file_picker.dart';
 
-
-CVModel? _globalCurrentCV;
-bool _globalIsUploading = false;
-
 class CVManagerScreen extends StatefulWidget {
   const CVManagerScreen({super.key});
 
@@ -17,7 +13,9 @@ class CVManagerScreen extends StatefulWidget {
 }
 
 class _CVManagerScreenState extends State<CVManagerScreen> {
-  
+  CVModel? _currentCV;
+  bool _isUploading = false;
+
   void _handleUpload() async {
     try {
         
@@ -27,7 +25,7 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
       );
 
       if (result != null) {
-        setState(() => _globalIsUploading = true);
+        setState(() => _isUploading = true);
 
         // محاكاة وقت التحليل بالـ AI لمدة ثانيتين
         await Future.delayed(const Duration(seconds: 2));
@@ -38,7 +36,7 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
         String sizeInMb = "${(file.size / (1024 * 1024)).toStringAsFixed(1)} MB";
 
         setState(() {
-          _globalCurrentCV = CVModel(
+          _currentCV = CVModel(
             fileName: file.name,
             fileSize: sizeInMb,
             uploadDate: "Today",
@@ -51,7 +49,7 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
               "Consider adding a link to your GitHub profile.",
             ],
           );
-          _globalIsUploading = false;
+          _isUploading = false;
         });
       }
     } catch (e) {
@@ -60,7 +58,7 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
   }
 
   void _handleDelete() {
-    setState(() => _globalCurrentCV = null);
+    setState(() => _currentCV = null);
   }
 
   @override
@@ -82,19 +80,19 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (_globalCurrentCV == null)
+            if (_currentCV == null)
               const EmptyCVWidget()
             else
-              CVCard(cv: _globalCurrentCV!, onDelete: _handleDelete),
+              CVCard(cv: _currentCV!, onDelete: _handleDelete),
 
             const SizedBox(height: 24),
 
             UploadCVButton(
               onPressed: _handleUpload,
-              isUploading: _globalIsUploading, 
+              isUploading: _isUploading, 
             ),
 
-            if (_globalCurrentCV != null) ...[
+            if (_currentCV != null) ...[
               const SizedBox(height: 35),
               const Row(
                 children: [
@@ -110,12 +108,12 @@ class _CVManagerScreenState extends State<CVManagerScreen> {
               
               const Text("Strengths", style: TextStyle(color: Color(0xFF34D399), fontSize: 14, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              ..._globalCurrentCV!.strengths.map((s) => _buildInsightTile(s, Icons.check_circle_outline, const Color(0xFF34D399))),
+              ..._currentCV!.strengths.map((s) => _buildInsightTile(s, Icons.check_circle_outline, const Color(0xFF34D399))),
               
               const SizedBox(height: 16),
               const Text("Suggested Improvements", style: TextStyle(color: Color(0xFFFBBF24), fontSize: 14, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              ..._globalCurrentCV!.improvements.map((i) => _buildInsightTile(i, Icons.lightbulb_outline, const Color(0xFFFBBF24))),
+              ..._currentCV!.improvements.map((i) => _buildInsightTile(i, Icons.lightbulb_outline, const Color(0xFFFBBF24))),
             ],
           ],
         ),

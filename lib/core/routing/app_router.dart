@@ -40,7 +40,11 @@ class AppRouter {
           authService: authService,
           onboardingRepository: onboardingRepository,
         ),
-      AppRoutes.profile => const ProfileScreen(),
+      AppRoutes.profile => ProfileScreen(
+          onboardingRepository: onboardingRepository,
+          interviewRepository: interviewRepository,
+          authService: authService,
+        ),
       AppRoutes.cvManager => const CVManagerScreen(),
       AppRoutes.setup => const InterviewSetupScreen(),
       AppRoutes.lobby => PreInterviewLobbyScreen(

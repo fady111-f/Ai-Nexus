@@ -6,19 +6,33 @@ import 'package:mockmate/features/auth/domain/auth_service.dart';
 /// changes to the sign-in UI because consumers depend on [AuthService].
 class TemporaryAuthService implements AuthService {
   bool _isSignedIn = false;
+  String? _email;
 
   @override
   Future<bool> isAuthenticated() => Future<bool>.value(_isSignedIn);
 
   @override
-  Future<void> signIn() {
+  Future<void> signIn({String? email, String? password}) {
     _isSignedIn = true;
+    _email = email ?? 'guest@mockmate.ai';
+    return Future<void>.value();
+  }
+
+  @override
+  Future<void> signUp({required String email, required String password}) {
+    _isSignedIn = true;
+    _email = email;
     return Future<void>.value();
   }
 
   @override
   Future<void> signOut() {
     _isSignedIn = false;
+    _email = null;
     return Future<void>.value();
   }
+
+  @override
+  String? get currentUserEmail => _isSignedIn ? (_email ?? 'guest@mockmate.ai') : null;
 }
+

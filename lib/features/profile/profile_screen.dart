@@ -1,144 +1,243 @@
 import 'package:flutter/material.dart';
-import 'models/user_profile_model.dart';
+import 'package:mockmate/core/routing/app_routes.dart';
+import 'package:mockmate/core/theme/mockmate_theme.dart';
+import 'package:mockmate/features/auth/domain/auth_service.dart';
+import 'package:mockmate/features/interviews/domain/models/interview_session.dart';
+import 'package:mockmate/features/interviews/domain/repositories/interview_repository.dart';
+import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
+import 'package:mockmate/features/onboarding/domain/repositories/onboarding_repository.dart';
 import 'widgets/profile_menu_item.dart';
-import 'package:mockmate/features/cv_manager/cv_manager_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({
+    required this.onboardingRepository,
+    required this.interviewRepository,
+    required this.authService,
+    super.key,
+  });
+
+  final OnboardingRepository onboardingRepository;
+  final InterviewRepository interviewRepository;
+  final AuthService authService;
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<(UserProfile?, List<InterviewSession>)> _dataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _dataFuture = _loadData();
+  }
+
+  Future<(UserProfile?, List<InterviewSession>)> _loadData() async {
+    final profile = await widget.onboardingRepository.loadUserProfile();
+    final sessions = await widget.interviewRepository.getSessions();
+    return (profile, sessions);
+  }
+
+  Future<void> _handleSignOut() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: MockMateColors.surface,
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              'Sign Out',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      await widget.authService.signOut();
+      if (mounted) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(AppRoutes.signIn, (route) => false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-  
-    final user = UserProfile(
-      name: "Ereny",
-      email: "alia.ereny@mockmate.ai",
-      targetRole: "aim",
-      careerField: "Software Engineering",
-      experienceLevel: "Student",
-      completedInterviews: 0,
-      practiceTime: "0 min",
-    );
-
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0F14), 
+      backgroundColor: MockMateColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Profile", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('Profile'),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-          
-            Center(
+      body: FutureBuilder<(UserProfile?, List<InterviewSession>)>(
+        future: _dataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError || snapshot.data == null) {
+            return Center(
+              child: Text(
+                'Could not load profile.',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            );
+          }
+
+          final profile = snapshot.data!.$1;
+          final sessions = snapshot.data!.$2;
+
+          if (profile == null) {
+            return Center(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Stack(
+                  const Icon(Icons.person_off_outlined,
+                      size: 48, color: MockMateColors.textSecondary),
+                  const SizedBox(height: MockMateSpacing.medium),
+                  Text(
+                    'No profile found.',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: MockMateSpacing.xSmall),
+                  Text(
+                    'Complete onboarding to set up your profile.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final totalMinutes = sessions.fold<int>(
+            0,
+            (sum, s) => sum + s.duration.inMinutes,
+          );
+          final practiceLabel = totalMinutes >= 60
+              ? '${(totalMinutes / 60).toStringAsFixed(1)} hr'
+              : '$totalMinutes min';
+          final email = widget.authService.currentUserEmail;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                // Avatar & name
+                Center(
+                  child: Column(
                     children: [
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
-                            colors: [Color(0xFF6366F1), Color(0xFF9333EA)],
+                            colors: [
+                              MockMateColors.primary,
+                              MockMateColors.primaryStrong,
+                            ],
                           ),
                         ),
                         child: const CircleAvatar(
                           radius: 45,
-                          backgroundColor: Color(0xFF151922),
-                          child: Icon(Icons.person, size: 45, color: Colors.white),
+                          backgroundColor: MockMateColors.surface,
+                          child: Icon(Icons.person,
+                              size: 45, color: MockMateColors.textPrimary),
                         ),
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(color: Color(0xFF6366F1), shape: BoxShape.circle),
-                          child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
+                      const SizedBox(height: 16),
+                      Text(
+                        profile.targetRole,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      if (email != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          email,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                // Stats
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: MockMateColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: MockMateColors.outline),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildStatItem('Interviews', '${sessions.length}'),
+                      Container(
+                          width: 1, height: 30, color: MockMateColors.outline),
+                      _buildStatItem('Practice Time', practiceLabel),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Menu
+                Container(
+                  decoration: BoxDecoration(
+                    color: MockMateColors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: MockMateColors.outline),
+                  ),
+                  child: Column(
+                    children: [
+                      ProfileMenuItem(
+                        icon: Icons.badge_outlined,
+                        title:
+                            'Setup Details (${profile.careerField.label})',
+                        onTap: () {},
+                      ),
+                      const Divider(
+                          color: MockMateColors.outline, height: 1),
+                      ProfileMenuItem(
+                        icon: Icons.description_outlined,
+                        title: 'Manage CV',
+                        onTap: () =>
+                            Navigator.pushNamed(context, AppRoutes.cvManager),
+                      ),
+                      const Divider(
+                          color: MockMateColors.outline, height: 1),
+                      ProfileMenuItem(
+                        icon: Icons.settings_outlined,
+                        title: 'Account Settings',
+                        onTap: () {},
+                      ),
+                      const Divider(
+                          color: MockMateColors.outline, height: 1),
+                      ProfileMenuItem(
+                        icon: Icons.logout,
+                        title: 'Sign Out',
+                        isDestructive: true,
+                        onTap: _handleSignOut,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(user.name, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  Text("Target Role: ${user.targetRole}", style: const TextStyle(color: Colors.white54, fontSize: 14)),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
-
-            
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFF151922),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildStatItem("Interviews", "${user.completedInterviews}"),
-                  Container(width: 1, height: 30, color: Colors.white10),
-                  _buildStatItem("Practice Time", user.practiceTime),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-          
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF151922),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-              ),
-              child: Column(
-                children: [
-                  ProfileMenuItem(
-                    icon: Icons.badge_outlined,
-                    title: "Setup Details (${user.careerField})",
-                    onTap: () {},
-                  ),
-                  const Divider(color: Colors.white10, height: 1),
-                  ProfileMenuItem(
-                    icon: Icons.description_outlined,
-                    title: "Manage CV ",
-                    onTap: () {
-                     Navigator.push(
-                        context,
-                         MaterialPageRoute(
-                         builder: (context) => CVManagerScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  const Divider(color: Colors.white10, height: 1),
-                  ProfileMenuItem(
-                    icon: Icons.settings_outlined,
-                    title: "Account Settings",
-                    onTap: () {},
-                  ),
-                  const Divider(color: Colors.white10, height: 1),
-                  ProfileMenuItem(
-                    icon: Icons.logout,
-                    title: "Sign Out",
-                    isDestructive: true,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -146,9 +245,22 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildStatItem(String label, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: const TextStyle(
+            color: MockMateColors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: MockMateColors.textSecondary,
+            fontSize: 13,
+          ),
+        ),
       ],
     );
   }

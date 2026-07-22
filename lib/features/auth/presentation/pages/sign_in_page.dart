@@ -21,10 +21,20 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isSubmitting = false;
+  bool _isSignUp = false;
   String? _entryError;
 
-  Future<void> _enterApp() async {
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _enterApp({bool isGuest = false}) async {
     if (_isSubmitting) {
       return;
     }
@@ -33,10 +43,31 @@ class _SignInPageState extends State<SignInPage> {
       _isSubmitting = true;
       _entryError = null;
     });
+
     try {
-      await widget.authService.signIn();
-      final onboardingCompleted = await widget.onboardingRepository
-          .isOnboardingCompleted();
+      if (isGuest) {
+        await widget.authService.signIn();
+      } else {
+        final email = _emailController.text.trim();
+        final password = _passwordController.text.trim();
+
+        if (email.isEmpty && password.isEmpty) {
+          await widget.authService.signIn();
+        } else if (email.isEmpty || password.isEmpty) {
+          setState(() {
+            _entryError = 'Please enter both email and password.';
+            _isSubmitting = false;
+          });
+          return;
+        } else if (_isSignUp) {
+          await widget.authService.signUp(email: email, password: password);
+        } else {
+          await widget.authService.signIn(email: email, password: password);
+        }
+      }
+
+      final onboardingCompleted =
+          await widget.onboardingRepository.isOnboardingCompleted();
       if (!mounted) {
         return;
       }
@@ -47,10 +78,21 @@ class _SignInPageState extends State<SignInPage> {
       } else {
         await Navigator.of(context).pushNamed(AppRoutes.onboarding);
       }
-    } on Object {
+    } catch (e) {
       if (mounted) {
+        final msg = e.toString();
         setState(() {
-          _entryError = 'We could not continue right now. Please try again.';
+          if (msg.contains('user-not-found') || msg.contains('invalid-credential')) {
+            _entryError = 'Invalid email or password.';
+          } else if (msg.contains('email-already-in-use')) {
+            _entryError = 'An account already exists for this email.';
+          } else if (msg.contains('weak-password')) {
+            _entryError = 'Password should be at least 6 characters.';
+          } else if (msg.contains('invalid-email')) {
+            _entryError = 'Please enter a valid email address.';
+          } else {
+            _entryError = 'Authentication failed. Please try again.';
+          }
         });
       }
     } finally {
@@ -92,15 +134,25 @@ class _SignInPageState extends State<SignInPage> {
                         child: isLandscape
                             ? _LandscapeLayout(
                                 isSubmitting: _isSubmitting,
+                                isSignUp: _isSignUp,
                                 entryError: _entryError,
-                                onEnterApp: _enterApp,
+                                emailController: _emailController,
+                                passwordController: _passwordController,
+                                onEnterApp: () => _enterApp(isGuest: false),
+                                onGuestEnter: () => _enterApp(isGuest: true),
+                                onToggleMode: () => setState(() => _isSignUp = !_isSignUp),
                               )
                             : _PortraitLayout(
                                 availableWidth: constraints.maxWidth,
                                 availableHeight: constraints.maxHeight,
                                 isSubmitting: _isSubmitting,
+                                isSignUp: _isSignUp,
                                 entryError: _entryError,
-                                onEnterApp: _enterApp,
+                                emailController: _emailController,
+                                passwordController: _passwordController,
+                                onEnterApp: () => _enterApp(isGuest: false),
+                                onGuestEnter: () => _enterApp(isGuest: true),
+                                onToggleMode: () => setState(() => _isSignUp = !_isSignUp),
                               ),
                       ),
                     ),
@@ -120,21 +172,31 @@ class _PortraitLayout extends StatelessWidget {
     required this.availableWidth,
     required this.availableHeight,
     required this.isSubmitting,
+    required this.isSignUp,
     required this.entryError,
+    required this.emailController,
+    required this.passwordController,
     required this.onEnterApp,
+    required this.onGuestEnter,
+    required this.onToggleMode,
   });
 
   final double availableWidth;
   final double availableHeight;
   final bool isSubmitting;
+  final bool isSignUp;
   final String? entryError;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
   final VoidCallback onEnterApp;
+  final VoidCallback onGuestEnter;
+  final VoidCallback onToggleMode;
 
   @override
   Widget build(BuildContext context) {
     final compact = availableWidth < 370 || availableHeight < 700;
-    final orbSize = compact ? 132.0 : 168.0;
-    final sectionGap = compact ? MockMateSpacing.large : MockMateSpacing.xLarge;
+    final orbSize = compact ? 112.0 : 144.0;
+    final sectionGap = compact ? MockMateSpacing.medium : MockMateSpacing.large;
 
     return Align(
       alignment: Alignment.topCenter,
@@ -148,15 +210,20 @@ class _PortraitLayout extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: MockMateBrand(compact: compact),
             ),
-            SizedBox(height: compact ? 20 : 36),
+            SizedBox(height: compact ? 12 : 24),
             Center(child: MockMateVoiceOrb(size: orbSize)),
-            SizedBox(height: compact ? 20 : 28),
+            SizedBox(height: compact ? 12 : 20),
             _HeroCopy(compact: compact, centered: true),
             SizedBox(height: sectionGap),
             _SignInPanel(
               isSubmitting: isSubmitting,
+              isSignUp: isSignUp,
               entryError: entryError,
+              emailController: emailController,
+              passwordController: passwordController,
               onEnterApp: onEnterApp,
+              onGuestEnter: onGuestEnter,
+              onToggleMode: onToggleMode,
               compact: compact,
             ),
           ],
@@ -169,13 +236,23 @@ class _PortraitLayout extends StatelessWidget {
 class _LandscapeLayout extends StatelessWidget {
   const _LandscapeLayout({
     required this.isSubmitting,
+    required this.isSignUp,
     required this.entryError,
+    required this.emailController,
+    required this.passwordController,
     required this.onEnterApp,
+    required this.onGuestEnter,
+    required this.onToggleMode,
   });
 
   final bool isSubmitting;
+  final bool isSignUp;
   final String? entryError;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
   final VoidCallback onEnterApp;
+  final VoidCallback onGuestEnter;
+  final VoidCallback onToggleMode;
 
   @override
   Widget build(BuildContext context) {
@@ -194,7 +271,7 @@ class _LandscapeLayout extends StatelessWidget {
                   const Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      MockMateVoiceOrb(size: 132),
+                      MockMateVoiceOrb(size: 120),
                       SizedBox(width: MockMateSpacing.large),
                       Expanded(child: _HeroCopy(compact: true)),
                     ],
@@ -207,8 +284,13 @@ class _LandscapeLayout extends StatelessWidget {
               width: 380,
               child: _SignInPanel(
                 isSubmitting: isSubmitting,
+                isSignUp: isSignUp,
                 entryError: entryError,
+                emailController: emailController,
+                passwordController: passwordController,
                 onEnterApp: onEnterApp,
+                onGuestEnter: onGuestEnter,
+                onToggleMode: onToggleMode,
                 compact: true,
               ),
             ),
@@ -240,15 +322,15 @@ class _HeroCopy extends StatelessWidget {
           textAlign: textAlign,
           style: Theme.of(
             context,
-          ).textTheme.displaySmall?.copyWith(fontSize: compact ? 32 : 42),
+          ).textTheme.displaySmall?.copyWith(fontSize: compact ? 26 : 36),
         ),
-        const SizedBox(height: MockMateSpacing.medium),
+        const SizedBox(height: MockMateSpacing.small),
         Text(
           'Practice real interviews. Get challenged.\nKnow exactly what to improve.',
           textAlign: textAlign,
           style: Theme.of(
             context,
-          ).textTheme.bodyLarge?.copyWith(fontSize: compact ? 14 : 16),
+          ).textTheme.bodyLarge?.copyWith(fontSize: compact ? 13 : 15),
         ),
       ],
     );
@@ -258,14 +340,24 @@ class _HeroCopy extends StatelessWidget {
 class _SignInPanel extends StatelessWidget {
   const _SignInPanel({
     required this.isSubmitting,
+    required this.isSignUp,
     required this.entryError,
+    required this.emailController,
+    required this.passwordController,
     required this.onEnterApp,
+    required this.onGuestEnter,
+    required this.onToggleMode,
     required this.compact,
   });
 
   final bool isSubmitting;
+  final bool isSignUp;
   final String? entryError;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
   final VoidCallback onEnterApp;
+  final VoidCallback onGuestEnter;
+  final VoidCallback onToggleMode;
   final bool compact;
 
   @override
@@ -284,37 +376,87 @@ class _SignInPanel extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(compact ? 20 : MockMateSpacing.large),
+        padding: EdgeInsets.all(compact ? 16 : MockMateSpacing.large),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Welcome back', style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              isSignUp ? 'Create Account' : 'Welcome back',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: MockMateSpacing.xSmall),
             Text(
-              'Ready to practice your next interview?',
+              isSignUp
+                  ? 'Sign up to sync your interview progress'
+                  : 'Ready to practice your next interview?',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: MockMateSpacing.large),
+            const SizedBox(height: MockMateSpacing.medium),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              autocorrect: false,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              decoration: InputDecoration(
+                labelText: 'Email Address',
+                hintText: 'name@example.com',
+                isDense: true,
+                filled: true,
+                fillColor: MockMateColors.background,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: MockMateColors.outline),
+                ),
+              ),
+            ),
+            const SizedBox(height: MockMateSpacing.small),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: '••••••••',
+                isDense: true,
+                filled: true,
+                fillColor: MockMateColors.background,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: MockMateColors.outline),
+                ),
+              ),
+            ),
+            const SizedBox(height: MockMateSpacing.medium),
             Semantics(
               button: true,
               child: ElevatedButton(
                 key: const Key('signInButton'),
                 onPressed: isSubmitting ? null : onEnterApp,
-                child: const Text('Sign In'),
+                child: Text(isSignUp ? 'Sign Up' : 'Sign In'),
               ),
             ),
-            const SizedBox(height: MockMateSpacing.small),
+            const SizedBox(height: MockMateSpacing.xSmall),
+            TextButton(
+              onPressed: isSubmitting ? null : onToggleMode,
+              child: Text(
+                isSignUp
+                    ? 'Already have an account? Sign In'
+                    : "Don't have an account? Sign Up",
+                style: const TextStyle(color: MockMateColors.primary, fontSize: 13),
+              ),
+            ),
+            const Divider(color: MockMateColors.outline, height: 24),
             Semantics(
               button: true,
               child: OutlinedButton(
                 key: const Key('guestButton'),
-                onPressed: isSubmitting ? null : onEnterApp,
+                onPressed: isSubmitting ? null : onGuestEnter,
                 child: const Text('Continue as Guest'),
               ),
             ),
-            const SizedBox(height: MockMateSpacing.medium),
             if (entryError != null) ...[
+              const SizedBox(height: MockMateSpacing.small),
               Text(
                 entryError!,
                 key: const Key('signInEntryError'),
@@ -324,16 +466,7 @@ class _SignInPanel extends StatelessWidget {
                   fontSize: 12,
                 ),
               ),
-              const SizedBox(height: MockMateSpacing.small),
             ],
-            Text(
-              'Secure authentication will be enabled in a future release.',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: MockMateColors.textSecondary.withValues(alpha: 0.72),
-                fontSize: 12,
-              ),
-            ),
           ],
         ),
       ),
@@ -379,3 +512,4 @@ class _AmbientBackgroundPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+

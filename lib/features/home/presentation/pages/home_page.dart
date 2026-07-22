@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
@@ -38,9 +37,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<(UserProfile?, List<InterviewSession>)> _loadHomeData() async {
-    if (kDebugMode) {
-      await widget.interviewRepository.seedDemoSessions();
-    }
     final profile = await widget.onboardingRepository.loadUserProfile();
     final sessions = await widget.interviewRepository.getSessions();
     return (profile, sessions);

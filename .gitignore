@@ -44,6 +44,7 @@ migrate_working_dir/
 *.pfx
 android/key.properties
 android/app/google-services.json
+lib/firebase_options.dart
 ios/Runner/GoogleService-Info.plist
 service-account*.json
 credentials*.json

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockmate/core/routing/app_routes.dart';
 import 'package:mockmate/core/theme/mockmate_theme.dart';
 import 'package:mockmate/features/home/presentation/pages/home_page.dart';
 import 'package:mockmate/features/onboarding/domain/models/user_profile.dart';
@@ -43,7 +44,7 @@ void main() {
       findsOne,
     );
     expect(find.byKey(const Key('recentInterviewEmptyState')), findsOne);
-    expect(find.text('No interviews yet'), findsOne);
+    expect(find.textContaining('No interviews yet'), findsOne);
     expect(find.byKey(const Key('interviewsStatValue')), findsOne);
     expect(find.text('0'), findsOne);
     expect(find.byKey(const Key('practiceTimeStatValue')), findsOne);
@@ -164,6 +165,21 @@ Future<void> _pumpHome(
   await tester.pumpWidget(
     MaterialApp(
       theme: MockMateTheme.dark,
+      routes: {
+        AppRoutes.setup: (context) => Scaffold(
+              key: const Key('interviewSetupComingSoonSheet'),
+              body: Column(
+                children: [
+                  const Text('Interview setup is coming next.'),
+                  IconButton(
+                    key: const Key('dismissInterviewSetupSheetButton'),
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+            ),
+      },
       home: HomePage(
         onboardingRepository: repository,
         interviewRepository: FakeInterviewRepository(),

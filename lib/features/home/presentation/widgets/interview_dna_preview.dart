@@ -53,6 +53,39 @@ class InterviewDnaPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!hasSessions) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Interview DNA & Skill Radar',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: MockMateSpacing.small),
+          DecoratedBox(
+            key: const Key('interviewDnaEmptyState'),
+            decoration: BoxDecoration(
+              color: MockMateColors.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: MockMateColors.outline),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(MockMateSpacing.large),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Complete your first mock interview to unlock your personalized performance profile.',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -393,17 +426,20 @@ class InterviewDnaPreview extends StatelessWidget {
           child: Row(
             children: [
               Icon(m.icon, size: 16, color: MockMateColors.cyan),
-              const SizedBox(width: 10),
-              SizedBox(
-                width: 140,
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 3,
                 child: Text(
                   m.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),

@@ -43,10 +43,15 @@ class _RecentActivityState extends State<RecentActivity> {
       // Filter by Score
       if (_selectedScore != 'All Scores' && session.overallScore != null) {
         final score = session.overallScore!;
-        if (_selectedScore == '80+ High' && score < 80) return false;
-        if (_selectedScore == '60-79 Mid' && (score < 60 || score >= 80))
+        if (_selectedScore == '80+ High' && score < 80) {
           return false;
-        if (_selectedScore == '<60 Low' && score >= 60) return false;
+        }
+        if (_selectedScore == '60-79 Mid' && (score < 60 || score >= 80)) {
+          return false;
+        }
+        if (_selectedScore == '<60 Low' && score >= 60) {
+          return false;
+        }
       }
       return true;
     }).toList();
